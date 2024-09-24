@@ -1,8 +1,8 @@
 // utils/api.ts
 export const fetchWithRetry = async (
-  url: string, 
-  options: RequestInit = {}, 
-  retries: number = 3, 
+  url: string,
+  options: RequestInit = {},
+  retries: number = 3,
   delay: number = 1000
 ): Promise<Response> => {
   try {

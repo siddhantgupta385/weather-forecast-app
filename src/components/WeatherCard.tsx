@@ -18,7 +18,7 @@ interface WeatherCardProps {
 }
 
 const WeatherCard: React.FC<WeatherCardProps> = ({ data, unit, city }) => {
-  const convertTemp = (temp: number): number => 
+  const convertTemp = (temp: number): number =>
     unit === "F" ? (temp * 9) / 5 + 32 : temp;
 
   const getWeatherInfo = (weatherCode: number): { icon: React.ReactNode; description: string; tip: string } => {
@@ -47,7 +47,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, unit, city }) => {
       61: "bg-thunderstorm",     // Thunderstorm
       71: "bg-snow",             // Snow
     };
-  
+
     return weatherClassMap[weatherCode] || "bg-unknown";
   };
 
@@ -63,7 +63,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, unit, city }) => {
   return (
     // <div className="weather-card bg-white shadow-lg rounded-lg p-6 max-w-sm mx-auto">
     <div className={`weather-card shadow-lg rounded-lg p-6 max-w-sm mx-auto ${weatherClass}`}>
- 
+
       <h2 className="text-2xl font-bold mb-4">{city}</h2>
       <div className="flex items-center justify-between mb-4">
         {icon}

@@ -14,24 +14,23 @@ function App() {
   const [weatherData, setWeatherData] = useState<any>(null);
   const [unit, setUnit] = useState("C"); // "C" for Celsius, "F" for Fahrenheit
   const [loading, setLoading] = useState<boolean>(true); // Add loading state
-  
+
   useEffect(() => {
     fetchWeatherhelper(city);
   }, [city]);
 
-  const fetchWeatherhelper = async (cityName:any) => {
+  const fetchWeatherhelper = async (cityName: any) => {
     try {
       setLoading(true); // Set loading to true when fetching starts
       const data = await fetchWeather(cityName);
       setWeatherData(data);
     } catch (error) {
       console.error("Error fetching weather:", error);
-    } finally{
+    } finally {
       setLoading(false)
-    } 
+    }
 
   };
-  
 
   const toggleUnit = () => {
     setUnit(unit === "C" ? "F" : "C");
@@ -41,26 +40,26 @@ function App() {
     <div className="App">
       <h1>Weather Forecast</h1>
       <CitySearch setCity={setCity} />
-        <div>
+      <div>
         {loading ? (<WeatherCardSkeleton />) : (<WeatherCard data={weatherData} unit={unit} city={city} />)}
-          <button onClick={toggleUnit}>
-            Toggle to {unit === "C" ? "Fahrenheit" : "Celsius"}
-          </button>
-          <h2>Forecast</h2>
-          <div className="forecast">
-            {loading ? (<ForecastCardSkeleton />):(
-              weatherData.daily.temperature_2m_max.map((temp:any, index:any) =>
-                  <ForecastCard
-                    key={index}
-                    day={index}
-                    maxTemp={temp}
-                    minTemp={weatherData.daily.temperature_2m_min[index]}
-                    unit={unit}
-                  />
-                )
-              )}
-          </div>
+        <button onClick={toggleUnit}>
+          Toggle to {unit === "C" ? "Fahrenheit" : "Celsius"}
+        </button>
+        <h2>Forecast</h2>
+        <div className="forecast">
+          {loading ? (<ForecastCardSkeleton />) : (
+            weatherData.daily.temperature_2m_max.map((temp: any, index: any) =>
+              <ForecastCard
+                key={index}
+                day={index}
+                maxTemp={temp}
+                minTemp={weatherData.daily.temperature_2m_min[index]}
+                unit={unit}
+              />
+            )
+          )}
         </div>
+      </div>
     </div>
   );
 }

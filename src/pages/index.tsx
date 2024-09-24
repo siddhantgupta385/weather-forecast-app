@@ -49,7 +49,7 @@ function App() {
       <CitySearch setCity={setCity} />
       {weatherData && (
         <div>
-          <WeatherCard data={weatherData} unit={unit} />
+          <WeatherCard data={weatherData} unit={unit} city={city} />
           <button onClick={toggleUnit}>Toggle to {unit === "C" ? "Fahrenheit" : "Celsius"}</button>
           <h2>5-Day Forecast</h2>
           <div className="forecast">

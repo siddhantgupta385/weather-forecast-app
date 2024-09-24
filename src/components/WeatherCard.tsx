@@ -13,7 +13,7 @@ interface WeatherData {
 
 interface WeatherCardProps {
   data: WeatherData;
-  unit: 'C' | 'F';
+  unit: string;
   city: string;
 }
 

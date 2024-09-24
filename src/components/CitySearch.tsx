@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { debounce } from 'lodash';
-// import { Input } from "@/components/ui/input";
 
 interface CitySearchProps {
   setCity: (city: string) => void;

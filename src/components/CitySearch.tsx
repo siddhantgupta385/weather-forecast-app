@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { debounce } from 'lodash';
+import { fetchCities } from '@/pages/api/cityList';
 
 interface CitySearchProps {
   setCity: (city: string) => void;
@@ -8,29 +9,35 @@ interface CitySearchProps {
 const CitySearch: React.FC<CitySearchProps> = ({ setCity }) => {
   const [input, setInput] = useState('');
   const [cities, setCities] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showNoResults, setShowNoResults] = useState<any>(false);
+  const inputRef = useRef<any>(null);
 
-  const fetchCities = async (query: string) => {
+  
+  const fetchCitiesHelper = async (query: string) => {
     if (!query) {
       setCities([]);
+      setShowNoResults(true);
       return;
     }
-
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5`);
-      const data = await response.json();
-      
-      // Extract city names from the data
-      const cityNames = data.map((item: any) => item.display_name);
-      setCities(cityNames);
+      setIsLoading(true); 
+      const cityList = await fetchCities(query);
+      setCities(cityList);
+
+      // Show the "No cities found" message only if the query is not empty and there are no results
+      setShowNoResults(query && cityList.length === 0);
     } catch (error) {
       console.error("Error fetching cities:", error);
-      setCities([]);
+      setShowNoResults(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Create a debounced version of fetchCities
   const debouncedFetchCities = useCallback(
-    debounce((query: string) => fetchCities(query), 300),
+    debounce((query: string) => fetchCitiesHelper(query), 300),
     []
   );
 
@@ -53,8 +60,10 @@ const CitySearch: React.FC<CitySearchProps> = ({ setCity }) => {
         value={input}
         onChange={handleInputChange}
         placeholder="Search City"
+        ref={inputRef}
       />
-      {cities.length > 0 && (
+      {isLoading && <div className="loading">Loading...</div>}
+      {cities.length > 0 && !isLoading &&(
         <div className="suggestions">
           {cities.map((city) => (
             <div
@@ -65,6 +74,11 @@ const CitySearch: React.FC<CitySearchProps> = ({ setCity }) => {
               {city}
             </div>
           ))}
+        </div>
+      )}
+      {!isLoading && showNoResults && inputRef.current && inputRef.current.focus && (
+        <div className="suggestions">
+          No cities found
         </div>
       )}
     </div>

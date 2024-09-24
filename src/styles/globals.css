@@ -201,7 +201,7 @@ button:hover {
   position: absolute;
   top: 100%; /* Position below the input */
   left: 0;
-  width: 100%;
+  width: 106%;
   z-index: 10; /* Ensure suggestions are on top */
   background-color: #454a4d;
   border: 1px solid #ccc;

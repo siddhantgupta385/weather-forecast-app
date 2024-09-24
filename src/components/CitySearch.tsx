@@ -1,25 +1,43 @@
-import { useState } from 'react';
+import React, { useState } from "react";
 
-interface CitySearchProps {
-  onSearch: (city: string) => void;
-}
+const CitySearch = ({ setCity }:any) => {
+  const [input, setInput] = useState("");
+  const [cities, setCities] = useState<any>([]);
 
-const CitySearch: React.FC<CitySearchProps> = ({ onSearch }) => {
-  const [query, setQuery] = useState('');
-
-  const handleSearch = () => {
-    if (query) onSearch(query);
+  const handleInputChange = (e:any) => {
+    setInput(e.target.value);
+    fetchCities(e.target.value);
   };
 
+  const fetchCities = async (query:any) => {
+    if (!query) return;
+
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1&limit=5`);
+      const data = await response.json();
+      
+      // Extract city names from the data
+      const cityNames = data.map((item:any) => item.display_name);
+      setCities(cityNames);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
   return (
-    <div>
+    <div className="city-search">
       <input
         type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for a city..."
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Search City"
       />
-      <button onClick={handleSearch}>Search</button>
+      <div className="dropdown">
+        {cities.map((city:any) => (
+          <p key={city} onClick={() => setCity(city)}>
+            {city}
+          </p>
+        ))}
+      </div>
     </div>
   );
 };
